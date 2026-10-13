@@ -2,9 +2,7 @@
   "name": "boxcar-brasil",
   "version": "1.0.0",
   "description": "Clone completo da loja BoxCar Brasil (boxcarbrasil.shop)",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
     "dev": "node server.js"
   },
   "keywords": ["boxcar", "e-commerce", "cooler", "landing-page"],
