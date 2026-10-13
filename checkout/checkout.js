@@ -48,16 +48,8 @@ const defaultUnit = {
   plate: 'BOXCAR'
 };
 
-if (requestedQty === 2) {
-  if (!cart) cart = { version: 2, variant: requestedOffer, quantity: 2, units: [] };
-  cart.quantity = 2;
-  if (!cart.units || cart.units.length === 0) {
-    cart.units = [defaultUnit, Object.assign({}, defaultUnit)];
-  } else if (cart.units.length === 1) {
-    cart.units.push(Object.assign({}, cart.units[0]));
-  }
-  try { sessionStorage.setItem(key, JSON.stringify(cart)); } catch(e){}
-} else if (!cart || !cart.units || cart.units.length === 0) {
+// Sempre 1 unidade BoxCar
+if (!cart || !cart.units || cart.units.length === 0) {
   cart = {
     version: 2,
     variant: requestedOffer,
@@ -65,7 +57,7 @@ if (requestedQty === 2) {
     units: [defaultUnit]
   };
   try { sessionStorage.setItem(key, JSON.stringify(cart)); } catch(e){}
-} else if (requestedQty === 1) {
+} else {
   cart.quantity = 1;
   if (cart.units.length > 1) {
     cart.units = [cart.units[0]];
@@ -74,16 +66,12 @@ if (requestedQty === 2) {
 }
 let bumpsSelected = [];
 
-// Regra de Preço: 1 unidade = R$ 97,00 | 2 unidades = R$ 129,00 (economia de R$ 65,00)
+// Preço Fixo: 1 unidade = R$ 97,00
 function getCartQuantity() {
-  return cart?.quantity || cart?.units?.length || 1;
+  return 1;
 }
 
-const cartTotal = () => {
-  const qty = getCartQuantity();
-  if (qty >= 2) return 129.00;
-  return 97.00;
-};
+const cartTotal = () => 97.00;
 
 const bumpsTotal = () => bumpsSelected.reduce((acc, sku) => acc + (BUMP_CATALOG.find(b=>b.sku===sku)?.priceCents || 0) / 100, 0);
 
@@ -121,15 +109,14 @@ function renderSummary(target) {
   const compact = target.closest('aside') !== null;
   if (!cart) return;
 
-  const qty = getCartQuantity();
-  const unitDisplayPrice = qty >= 2 ? 64.50 : 97.00;
+  const unitDisplayPrice = 97.00;
 
-  cart.units.forEach((unit, index) => {
+  cart.units.forEach((unit) => {
     const item = document.createElement('div'); item.className = 'summary-item';
     const photo = document.createElement('img'); photo.src = '../media/boxcar-main.png'; photo.alt = '';
     const content = document.createElement('div'); content.className = 'summary-item-main';
     const name = document.createElement('strong');
-    name.textContent = qty >= 2 ? `BoxCar (Unidade ${index + 1} de 2 — Combo Promocional)` : `BoxCar – Cooler dos Apaixonados por Carros & Churrasco`;
+    name.textContent = 'BoxCar – Cooler dos Apaixonados por Carros & Churrasco';
     
     const detail = document.createElement('small'); 
     detail.textContent = compact ? `Qtd: 1 · ${unit.brand} ${unit.model}` : `Vista: ${unit.side}; Marca: ${unit.brand}; Modelo: ${unit.model}; Ano: ${unit.year}; Cor: ${unit.color}; Nome na placa: ${unit.plate}`;
@@ -148,22 +135,10 @@ function renderSummary(target) {
       const actions = document.createElement('div'); actions.className = 'item-actions';
       
       const quantity = document.createElement('div'); quantity.className = 'quantity-control';
-      const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label', 'Diminuir');
-      minus.addEventListener('click', () => removeUnit(index));
+      const count = document.createElement('span'); count.textContent = 'Qtd: 1';
+      quantity.append(count);
       
-      const count = document.createElement('span'); count.textContent = '1';
-      
-      const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; 
-      plus.disabled = true; 
-      plus.title = 'Escolha outro carro na página do produto';
-      
-      quantity.append(minus, count, plus);
-      
-      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'remove-unit'; remove.setAttribute('aria-label', 'Remover item');
-      remove.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v7m6-7v7"/></svg>';
-      remove.addEventListener('click', () => removeUnit(index));
-      
-      actions.append(quantity, remove);
+      actions.append(quantity);
       content.append(actions);
     }
     item.append(photo, content);
@@ -176,15 +151,10 @@ function renderTotals(target) {
   target.replaceChildren();
   const compact = target.closest('aside') !== null;
   const shipping = selectedShipping();
-  const qty = getCartQuantity();
   
   const rows = [
-    [compact ? 'Subtotal' : 'Produtos' + (qty >= 2 ? ' (2 unidades)' : ''), cartTotal() + bumpsTotal(), '']
+    [compact ? 'Subtotal' : 'Produtos', cartTotal() + bumpsTotal(), '']
   ];
-
-  if (qty >= 2) {
-    rows.push(['Desconto Combo (34% OFF)', '- R$ 65,00', 'discount-row']);
-  }
 
   rows.push([`Frete (${shipping.method.toUpperCase()})`, shipping.cents ? money(shipping.cents / 100) : 'Grátis', '']);
   rows.push(['Total', money(orderTotal()), 'total']);
@@ -412,23 +382,21 @@ $('pix-create')?.addEventListener('click', async () => {
   const shipping = selectedShipping();
   const shippingFeeCents = shipping.cents;
 
-  const qty = getCartQuantity();
-  const unitPriceCents = qty >= 2 ? 6450 : 9700;
+  const unitPriceCents = 9700;
   const items = [];
 
   if (cart?.units && cart.units.length > 0) {
-    cart.units.forEach((u, i) => {
-      items.push({
-        title: `BoxCar (${u.brand || 'Personalizado'} ${u.model || ''}) - Placa ${u.plate || 'BOXCAR'}`,
-        quantity: 1,
-        unitPrice: unitPriceCents,
-        tangible: true
-      });
+    const u = cart.units[0];
+    items.push({
+      title: `BoxCar (${u.brand || 'Personalizado'} ${u.model || ''}) - Placa ${u.plate || 'BOXCAR'}`,
+      quantity: 1,
+      unitPrice: unitPriceCents,
+      tangible: true
     });
   } else {
     items.push({
-      title: qty >= 2 ? 'BoxCar – Combo 2 Unidades' : 'BoxCar – Cooler dos Apaixonados por Carros & Churrasco',
-      quantity: qty,
+      title: 'BoxCar – Cooler dos Apaixonados por Carros & Churrasco',
+      quantity: 1,
       unitPrice: unitPriceCents,
       tangible: true
     });

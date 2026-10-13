@@ -168,7 +168,6 @@ if (giftPlay) giftPlay.addEventListener('click', () => {
 });
 
 const section = document.querySelector('section[aria-label="Personalize seu BoxCar"]');
-const secondSectionTemplate = section?.cloneNode(true);
 const customizers = [];
 let catalog = {};
 fetch('./vehicles.json').then(response => response.json()).then(data => {
@@ -282,110 +281,40 @@ function setupCustomizer(formSection) {
 }
 setupCustomizer(section);
 
-const packButtons = [...document.querySelectorAll('button')].filter(button => /^[12] Unidade(?:s)? BoxCar/.test(button.textContent.trim()));
-const savingsNote = [...document.querySelectorAll('p')].find(item => item.textContent.includes('Você economiza') && item.textContent.includes('nesta compra'));
-if (packButtons.length === 2) {
-  const firstPrice = packButtons[0].querySelector('.shrink-0.text-right > div');
-  const secondPrices = packButtons[1].querySelectorAll('.shrink-0.text-right > div');
-  const discount = [...packButtons[1].querySelectorAll('div')].find(element => element.classList.contains('mt-0.5'));
-  if (firstPrice) firstPrice.textContent = money(offer.singleCents);
-  if (secondPrices[0]) secondPrices[0].textContent = money(offer.doubleCents);
-  if (secondPrices[1]) secondPrices[1].textContent = money(offer.compareCents);
-  if (discount) discount.textContent = `${offer.discountPercent}% OFF — economize ${money(offer.savingsCents)}`;
-}
 function vehicleName(state) {
   const brand = state?.brand?.trim();
   const model = state?.model?.trim();
   return brand && model ? `${brand} ${model}` : '';
 }
+
 function updatePackLabels() {
-  if (packButtons.length !== 2) return;
+  const singleLabel = document.getElementById('pack-label-single');
+  if (!singleLabel) return;
   const first = vehicleName(customizers[0]?.state);
-  const second = vehicleName(customizers[1]?.state);
-  const names = [
-    `1 Unidade BoxCar (${first || 'Escolha o modelo'})`,
-    first || second
-      ? `2 Unidades BoxCar (${first || 'Escolha o 1º modelo'} + ${second || 'Escolha o 2º modelo'})`
-      : '2 Unidades BoxCar (Escolha os modelos)'
-  ];
-  packButtons.forEach((button, index) => {
-    const label = button.querySelector('.min-w-0 > .flex > span');
-    if (!label) return;
-    label.parentElement.classList.add('mirror-pack-name-row');
-    label.classList.add('mirror-pack-name');
-    label.textContent = names[index];
-  });
+  singleLabel.textContent = `1 Unidade BoxCar (${first || 'Escolha o modelo'})`;
 }
-let secondUnit;
-let selectedPack = 1;
-function selectPack(pack) {
-  selectedPack = pack;
-  packButtons.forEach((button, index) => {
-    const selected = index + 1 === pack;
-    button.classList.add('mirror-pack');
-    button.dataset.selected = String(selected);
-    button.setAttribute('aria-pressed', String(selected));
-    const radio = button.firstElementChild?.firstElementChild;
-    if (radio) {
-      radio.classList.add('mirror-pack-radio');
-      radio.replaceChildren();
-      if (selected) {
-        const dot = document.createElement('div');
-        dot.className = 'h-[9px] w-[9px] rounded-full bg-[hsl(var(--store-blue))]';
-        radio.append(dot);
-      }
-    }
-  });
-  if (pack === 2 && !secondUnit && secondSectionTemplate) {
-    secondUnit = document.createElement('div');
-    secondUnit.className = 'mt-4 border-t border-border pt-1';
-    secondUnit.innerHTML = '<div class="mt-3 flex items-center justify-between gap-3"><p class="min-w-0 break-words text-sm font-semibold text-foreground">Unidade 2 · escolha outro carro</p></div>';
-    secondUnit.append(secondSectionTemplate);
-    packButtons[1].parentElement.parentElement.after(secondUnit);
-    setupCustomizer(secondSectionTemplate);
-    updatePackLabels();
-  }
-  if (secondUnit) secondUnit.hidden = pack !== 2;
-  if (savingsNote) {
-    savingsNote.parentElement.hidden = pack !== 2;
-    savingsNote.textContent = `Você economiza ${money(offer.savingsCents)} nesta compra`;
-  }
-}
-packButtons.forEach((button, index) => button.addEventListener('click', () => selectPack(index + 1)));
-if (packButtons.length === 2) selectPack(1);
+updatePackLabels();
+
 byText('button', '661 avaliações')?.addEventListener('click', () => document.querySelector('[data-section="avaliacoes"], #avaliacoes-sec')?.scrollIntoView({behavior:'smooth'}));
 
 function goToCheckout() {
   document.querySelector('.mirror-checkout-note')?.remove();
   const required = ['side', 'category', 'brand', 'model', 'year', 'color', 'plate'];
-  const selected = customizers.slice(0, selectedPack);
-    if (selectedPack === 2 && customizers[0]?.state) {
-    if (!customizers[1]) {
-      setupCustomizer(secondSectionTemplate);
-    }
-    if (customizers[1]) {
-      required.forEach(key => {
-        if (!String(customizers[1].state[key] || '').trim()) {
-          customizers[1].state[key] = customizers[0].state[key];
-        }
-      });
-    }
-  }
+  const state = customizers[0]?.state || {};
 
-  const incomplete = selected.findIndex(({state}) => required.some(key => !String(state[key] || '').trim()));
-  if (incomplete !== -1) {
-    const form = incomplete === 0 ? section : secondSectionTemplate;
+  const incomplete = required.some(key => !String(state[key] || '').trim());
+  if (incomplete) {
     const note = document.createElement('p');
     note.className = 'mirror-checkout-note';
     note.setAttribute('role', 'alert');
-    note.textContent = `Complete a personalização da unidade ${incomplete + 1}: frente ou traseira, tipo, marca, modelo, ano, cor e nome na placa.`;
-    form?.append(note);
-    form?.scrollIntoView({behavior:'smooth', block:'center'});
+    note.textContent = 'Complete a personalização do seu BoxCar: informe frente ou traseira, tipo, marca, modelo, ano, cor e o nome na placa.';
+    section?.append(note);
+    section?.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
-  const units = selected.map(({state}) => Object.fromEntries(required.map(key => [key, String(state[key]).trim().slice(0, 80)])));
+  const units = [Object.fromEntries(required.map(key => [key, String(state[key]).trim().slice(0, 80)]))];
   try {
-    const cart = {version:2,variant,quantity:selectedPack,units};
+    const cart = {version:2, variant, quantity: 1, units};
     if (sessionStorage.getItem(checkoutStorageKey) !== JSON.stringify(cart)) {
       sessionStorage.removeItem('ponto-forte-payment-id-v1');
       sessionStorage.removeItem(`ponto-forte-shipping-v1-${variant}`);
@@ -395,14 +324,14 @@ function goToCheckout() {
       if (typeof window.fbq === 'function') {
         window.fbq('track', 'InitiateCheckout', {
           content_name: 'Mini Cooler BoxCar',
-          value: selectedPack === 2 ? 129.00 : 97.00,
+          value: 97.00,
           currency: 'BRL',
-          num_items: selectedPack
+          num_items: 1
         });
       }
     } catch(e) {}
     window.BoxCarTracking?.track('AddToCart', cart, crypto.randomUUID());
-    window.location.assign(trackedUrl(`./checkout/index.html?offer=${variant}&quantity=${selectedPack}&v=129`));
+    window.location.assign(trackedUrl(`./checkout/index.html?offer=${variant}&quantity=1&v=129`));
   } catch {
     const note = document.createElement('p');
     note.className = 'mirror-checkout-note';
@@ -416,7 +345,7 @@ document.querySelector('button[aria-label="Abrir carrinho"]')?.addEventListener(
   let savedCart;
   try { savedCart = JSON.parse(sessionStorage.getItem(checkoutStorageKey) || 'null'); } catch {}
   if (savedCart?.variant === variant && pricingForCart(savedCart))
-    window.location.assign(trackedUrl(`./checkout/index.html?offer=${variant}&quantity=${selectedPack}&v=129`));
+    window.location.assign(trackedUrl(`./checkout/index.html?offer=${variant}&quantity=1&v=129`));
   else section?.scrollIntoView({behavior:'smooth'});
 });
 
