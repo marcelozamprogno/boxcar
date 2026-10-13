@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pague seu Pix | BoxCar</title>
+  <link rel="icon" href="../brand/boxcar-favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/styles-AmZeijte.css">
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1164791589215930');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1164791589215930&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 0; }
+    .header-bar { background: #202528; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; }
+    .header-bar img { height: 38px; width: auto; }
+    .header-bar span { color: #94a3b8; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .main-container { max-width: 620px; margin: 30px auto; padding: 0 16px 60px; }
+    .card { background: #ffffff; border-radius: 20px; padding: 32px 24px; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; text-align: center; }
+    
+    .timer-badge { display: inline-flex; align-items: center; gap: 8px; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; margin-bottom: 20px; }
+    
+    h1 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 8px; line-height: 1.3; }
+    .subtitle { font-size: 14px; color: #64748b; margin: 0 0 24px; line-height: 1.5; }
+    
+    .price-box { background: #f1f5f9; border-radius: 14px; padding: 18px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+    .price-box span { color: #475569; font-weight: 600; }
+    .price-box strong { font-size: 22px; color: #0f172a; font-weight: 800; }
+
+    .qr-frame { background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 16px; display: inline-block; margin-bottom: 20px; }
+    .qr-frame img { display: block; width: 220px; height: 220px; border-radius: 10px; margin: 0 auto; }
+    
+    .copy-section { margin-bottom: 24px; }
+    .pix-code-input { width: 100%; box-sizing: border-box; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #475569; text-align: center; margin-bottom: 12px; font-family: monospace; }
+    
+    .btn-copy { width: 100%; background: #16a34a; color: #ffffff; border: 0; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 800; cursor: pointer; transition: background .15s, transform .1s; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3); }
+    .btn-copy:hover { background: #15803d; }
+    .btn-copy:active { transform: scale(0.99); }
+    
+    .copy-feedback { display: none; background: #dcfce7; border: 1px solid #86efac; color: #166534; font-size: 13px; font-weight: 600; padding: 10px; border-radius: 8px; margin-top: 10px; }
+    
+    .status-pulse { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #475569; margin: 20px 0 28px; }
+    .pulse-dot { width: 10px; height: 10px; background: #16a34a; border-radius: 50%; animation: pulseRing 1.5s infinite; }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+    }
+
+    .instructions { text-align: left; background: #f8fafc; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f0; }
+    .instructions h4 { margin: 0 0 14px; font-size: 14px; font-weight: 700; color: #0f172a; }
+    .step-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 13px; color: #475569; line-height: 1.4; }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-num { width: 22px; height: 22px; border-radius: 50%; background: #202528; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* Tela de sucesso quando o polling confirma o pagamento */
+    #paid-screen { display: none; }
+    .success-icon { width: 80px; height: 80px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #16a34a; }
+    .btn-track { display: block; width: 100%; box-sizing: border-box; background: #202528; color: #fff; text-decoration: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 15px; margin-top: 24px; text-align: center; }
+    footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <a href="../"><img src="../brand/boxcar-logo-white.svg" alt="BoxCar"></a>
+    <span>🔒 Ambiente Seguro</span>
+  </div>
+
+  <div class="main-container">
+    <div class="card" id="waiting-screen">
+      <div class="timer-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Pague em até <strong id="countdown">14:59</strong></span>
+      </div>
+
+      <h1>Quase lá! Pague seu Pix para confirmar seu BoxCar</h1>
+      <p class="subtitle">Seu estoque está reservado temporariamente. O pagamento é processado instantaneamente.</p>
+
+      <div class="price-box">
+        <span>Valor a pagar:</span>
+        <strong id="display-amount">R$ 129,00</strong>
+      </div>
+
+      <div class="qr-frame">
+        <img id="qr-img" src="" alt="QR Code Pix">
+      </div>
+
+      <div class="copy-section">
+        <input type="text" id="pix-code" class="pix-code-input" readonly>
+        <button type="button" id="btn-copy" class="btn-copy">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          <span id="copy-btn-text">COPIAR CÓDIGO PIX</span>
+        </button>
+        <div id="copy-feedback" class="copy-feedback">
+          ✅ Código copiado com sucesso! Abra o app do seu banco e cole na opção <strong>Pix Copia e Cola</strong>.
+        </div>
+      </div>
+
+      <div class="status-pulse">
+        <div class="pulse-dot"></div>
+        <span id="status-label">Aguardando pagamento... (atualização automática)</span>
+      </div>
+
+      <div class="instructions">
+        <h4>Como pagar pelo celular:</h4>
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>Abra o aplicativo do seu banco e acerte na opção <strong>Pix</strong>.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>Selecione <strong>Pix Copia e Cola</strong> (ou Ler QR Code).</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>Cole o código copiado acima e confirme o pagamento.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div>Pronto! A aprovação é imediata e esta tela atualizará sozinha.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tela exibida automaticamente após aprovação -->
+    <div class="card" id="paid-screen">
+      <div class="success-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h1 style="color:#16a34a">Pagamento Confirmado com Sucesso!</h1>
+      <p class="subtitle">Seu pedido já foi aprovado e entrou na fila de fabricação e despacho da BoxCar.</p>
+
+      <div class="price-box">
+        <span>Pedido:</span>
+        <strong id="paid-order-id">#BOXCAR</strong>
+      </div>
+
+      <a href="https://usetracklog.online/rastreio" target="_blank" rel="noopener noreferrer" class="btn-track">Acompanhar Rastreio do Pedido</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 BoxCar Brasil. Todos os direitos reservados. Suporte: <a href="mailto:contato@boxcarbrasil.shop">contato@boxcarbrasil.shop</a></p>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const txId = params.get('id');
+    const urlTotal = parseFloat(params.get('total') || '0');
+
+    let orderData = null;
+    try {
+      orderData = JSON.parse(sessionStorage.getItem('boxcar_pix_order') || localStorage.getItem('boxcar_last_order') || 'null');
+    } catch(e) {}
+
+    const amount = urlTotal > 0 ? urlTotal : (orderData?.amount || 129.00);
+    const pixCode = orderData?.pixCode || params.get('code') || '';
+    const transactionId = txId || orderData?.id || '';
+
+    // Renderiza valor
+    document.getElementById('display-amount').textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount);
+    document.getElementById('paid-order-id').textContent = '#' + (transactionId ? transactionId.substring(0, 13) : 'CONFIRMADO');
+
+    // Renderiza Pix Code e QR Code
+    if (pixCode) {
+      document.getElementById('pix-code').value = pixCode;
+      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pixCode)}`;
+    }
+
+    // Copiar código Pix
+    const btnCopy = document.getElementById('btn-copy');
+    const copyFeedback = document.getElementById('copy-feedback');
+    const pixInput = document.getElementById('pix-code');
+    const copyBtnText = document.getElementById('copy-btn-text');
+
+    btnCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pixInput.value);
+        copyBtnText.textContent = 'CÓDIGO COPIADO!';
+        copyFeedback.style.display = 'block';
+        setTimeout(() => {
+          copyBtnText.textContent = 'COPIAR CÓDIGO PIX';
+        }, 3000);
+      } catch(e) {
+        pixInput.select();
+        copyFeedback.style.display = 'block';
+      }
+    });
+
+    // Cronômetro 15 minutos
+    let remaining = 900;
+    const countdownEl = document.getElementById('countdown');
+    setInterval(() => {
+      if (remaining > 0) remaining--;
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      countdownEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }, 1000);
+
+    // Dispara AddPaymentInfo
+    try {
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'AddPaymentInfo', {
+          content_type: 'product',
+          value: amount,
+          currency: 'BRL',
+          order_id: transactionId
+        }, { eventID: transactionId });
+      }
+    } catch(e) {}
+
+    // Polling a cada 3 segundos para confirmar pagamento automaticamente
+    if (transactionId) {
+      const pollTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`/processar-pagamento.php?id=${encodeURIComponent(transactionId)}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          const status = (data?.data?.status || data?.status || '').toUpperCase();
+
+          if (['PAID', 'APPROVED', 'SETTLED', 'COMPLETED'].includes(status)) {
+            clearInterval(pollTimer);
+            document.getElementById('waiting-screen').style.display = 'none';
+            document.getElementById('paid-screen').style.display = 'block';
+
+            // Dispara Purchase no Meta Pixel
+            try {
+              if (typeof window.fbq === 'function') {
+                window.fbq('track', 'Purchase', {
+                  content_type: 'product',
+                  value: amount,
+                  currency: 'BRL',
+                  order_id: transactionId
+                }, { eventID: 'purchase_' + transactionId });
+              }
+            } catch(e) {}
+          }
+        } catch(e) {}
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

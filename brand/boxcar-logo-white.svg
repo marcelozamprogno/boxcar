@@ -1,0 +1,15 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" role="img" aria-labelledby="title">
+  <title id="title">BoxCar</title>
+  <!-- Ícone Racing Geométrico -->
+  <g transform="translate(15, 45)">
+    <path d="M15 75 L42 25 L75 25 L50 75 Z" fill="#ffffff"/>
+    <path d="M47 25 L79 25 L61 75 L30 75 Z" fill="#ee5b1d"/>
+  </g>
+  <!-- Tipografia BoxCar Racing com encaixe milimétrico -->
+  <g font-family="Arial Black,Arial,sans-serif" font-size="116" font-style="italic" font-weight="900" letter-spacing="-5">
+    <text x="110" y="132" fill="#ffffff">Box</text>
+    <text x="335" y="132" fill="#ee5b1d">Car</text>
+  </g>
+  <!-- Linha de Pista / Aceleração -->
+  <path d="M335 152h195l-20 10H320z" fill="#ee5b1d"/>
+</svg>

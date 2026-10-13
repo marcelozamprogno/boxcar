@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BoxCar">
+  <rect width="64" height="64" rx="14" fill="#202528"/>
+  <!-- Letra B estilizada em Branco -->
+  <path d="M14 16 h14 c7 0 11 3 11 8 c0 4 -2 6 -6 7 c5 1 8 4 8 9 c0 6 -5 9 -13 9 h-14 z M22 22 v8 h6 c3 0 5 -1 5 -4 c0 -3 -2 -4 -5 -4 z M22 36 v8 h7 c4 0 6 -1 6 -4 c0 -3 -2 -4 -6 -4 z" fill="#ffffff"/>
+  <!-- Faixa Racing em Laranja Queimado no canto -->
+  <path d="M48 16 L56 16 L44 48 L36 48 Z" fill="#ee5b1d"/>
+</svg>
