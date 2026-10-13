@@ -228,10 +228,10 @@
     if (transactionId) {
       const pollTimer = setInterval(async () => {
         try {
-          const res = await fetch(`/processar-pagamento.php?id=${encodeURIComponent(transactionId)}`);
+          const res = await fetch(`/api/processar-pagamento?id=${encodeURIComponent(transactionId)}`);
           if (!res.ok) return;
           const data = await res.json();
-          const status = (data?.data?.status || data?.status || '').toUpperCase();
+          const status = (data?.status || data?.data?.status || data?.transaction?.status || '').toUpperCase();
 
           if (['PAID', 'APPROVED', 'SETTLED', 'COMPLETED'].includes(status)) {
             clearInterval(pollTimer);

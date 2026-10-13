@@ -450,54 +450,36 @@ $('pix-create')?.addEventListener('click', async () => {
 
   try {
     let res;
-    // Tenta primeiro via rota relativa com Content-Type
     try {
-      res = await fetch('../processar-pagamento.php', {
+      res = await fetch('/api/processar-pagamento', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload)
       });
     } catch(netErr) {
-      // Fallback para rota raiz
-      res = await fetch('/processar-pagamento.php', {
+      res = await fetch('../api/processar-pagamento', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload)
       });
     }
 
     let data = null;
     try {
-      if (res && res.ok) {
-        data = await res.json();
-      }
+      if (res) data = await res.json();
     } catch(parseErr) {}
 
-    if (!data || (!data.data && !data.pix)) {
-      const txId = 'tx_' + Math.random().toString(36).substring(2, 12);
-      const amountStr = (totalAmountCents / 100).toFixed(2);
-      const chavePix = 'contato@boxcarbrasil.shop';
-      const pixCode = `00020126580014br.gov.bcb.pix0136${chavePix}520400005303986540${amountStr.length}${amountStr}5802BR5913BOXCAR BRASIL6009SAO PAULO62070503***6304`;
-      data = {
-        status: 'success',
-        data: {
-          id: txId,
-          status: 'PENDING',
-          amount: totalAmountCents,
-          pix: {
-            qrcode: pixCode,
-            copyPasteCode: pixCode
-          }
-        }
-      };
+    if (!res.ok && data?.error) {
+      throw new Error(data.message || data.error);
     }
 
-    const txData = data.data || data;
-    const pixInfo = txData.pix || {};
-    const qrcodeText = pixInfo.qrcode || pixInfo.qrCode || pixInfo.copyPasteCode || txData.qrcode || '';
-    const transactionId = txData.id;
+    const txData = data?.data || data?.transaction || data || {};
+    const pixInfo = txData.pix || data?.pix || {};
+    const qrcodeText = pixInfo.copyPasteCode || pixInfo.qrcode || pixInfo.code || txData.copyPasteCode || txData.qrcode || '';
+    const transactionId = txData.id || data?.id;
 
     if (!qrcodeText) {
-      throw new Error('Código Pix não retornado pela API.');
+      throw new Error('Código Pix não retornado pela API InvictusPay.');
     }
 
     // Dispara evento Meta Pixel: AddPaymentInfo
