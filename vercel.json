@@ -1,10 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/processar-pagamento.php", "destination": "/api/processar-pagamento" },
-    { "source": "/webhook-pix.php", "destination": "/api/webhook-pix" },
-    { "source": "/politicas", "destination": "/politicas/index.html" },
-    { "source": "/checkout", "destination": "/checkout/index.html" },
-    { "source": "/pix", "destination": "/pix/index.html" }
-  ]
+  "trailingSlash": false
 }
