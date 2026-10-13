@@ -93,7 +93,7 @@
 
       <div class="price-box">
         <span>Valor a pagar:</span>
-        <strong id="display-amount">R$ 97,00</strong>
+        <strong id="display-amount">R$ 147,00</strong>
       </div>
 
       <div class="qr-frame">
@@ -168,7 +168,7 @@
       orderData = JSON.parse(sessionStorage.getItem('boxcar_pix_order') || localStorage.getItem('boxcar_last_order') || 'null');
     } catch(e) {}
 
-    const amount = urlTotal > 0 ? urlTotal : (orderData?.amount || 97.00);
+    const amount = urlTotal > 0 ? urlTotal : (orderData?.amount || 147.00);
     const pixCode = orderData?.pixCode || params.get('code') || '';
     const transactionId = txId || orderData?.id || '';
 

@@ -324,7 +324,7 @@ function goToCheckout() {
       if (typeof window.fbq === 'function') {
         window.fbq('track', 'InitiateCheckout', {
           content_name: 'Mini Cooler BoxCar',
-          value: 97.00,
+          value: 147.00,
           currency: 'BRL',
           num_items: 1
         });

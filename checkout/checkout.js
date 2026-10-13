@@ -66,12 +66,12 @@ if (!cart || !cart.units || cart.units.length === 0) {
 }
 let bumpsSelected = [];
 
-// Preço Fixo: 1 unidade = R$ 97,00
+// Preço Fixo: 1 unidade = R$ 147,00
 function getCartQuantity() {
   return 1;
 }
 
-const cartTotal = () => 97.00;
+const cartTotal = () => 147.00;
 
 const bumpsTotal = () => bumpsSelected.reduce((acc, sku) => acc + (BUMP_CATALOG.find(b=>b.sku===sku)?.priceCents || 0) / 100, 0);
 
@@ -109,7 +109,7 @@ function renderSummary(target) {
   const compact = target.closest('aside') !== null;
   if (!cart) return;
 
-  const unitDisplayPrice = 97.00;
+  const unitDisplayPrice = 147.00;
 
   cart.units.forEach((unit) => {
     const item = document.createElement('div'); item.className = 'summary-item';
@@ -382,7 +382,7 @@ $('pix-create')?.addEventListener('click', async () => {
   const shipping = selectedShipping();
   const shippingFeeCents = shipping.cents;
 
-  const unitPriceCents = 9700;
+  const unitPriceCents = 14700;
   const items = [];
 
   if (cart?.units && cart.units.length > 0) {

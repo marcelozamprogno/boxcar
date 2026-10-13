@@ -1,5 +1,5 @@
 const prices = Object.freeze({
-  '1': Object.freeze({1:9700, 2:12900}),
+  '1': Object.freeze({1:14700, 2:14700}),
   '3': Object.freeze({1:7900, 2:10900}),
   '2': Object.freeze({1:12153, 2:19783}),
   legacy: Object.freeze({1:8900, 2:14700})
